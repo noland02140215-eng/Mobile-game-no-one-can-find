@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#00f3ff">
     <title>Cyber Runner: Energy Evolution</title>
+    <link rel="manifest" href="manifest.json">
     <style>
         * {
             box-sizing: border-box;
@@ -53,6 +55,7 @@
             background: rgba(5, 8, 20, 0.92);
             padding: 1.25rem;
             text-align: center;
+            backdrop-filter: blur(6px);
         }
 
         .modal-card {
@@ -66,7 +69,7 @@
         }
 
         .glow-title {
-            font-size: 2.1rem;
+            font-size: 2rem;
             font-weight: 900;
             letter-spacing: 2px;
             margin-bottom: 0.4rem;
@@ -76,7 +79,7 @@
         }
 
         .glow-pink {
-            font-size: 2rem;
+            font-size: 1.9rem;
             font-weight: 900;
             letter-spacing: 2px;
             margin-bottom: 0.5rem;
@@ -87,7 +90,7 @@
 
         .subtitle {
             color: #a5f3fc;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             margin-bottom: 1.25rem;
             line-height: 1.4;
         }
@@ -112,26 +115,39 @@
             margin-bottom: 0.3rem;
         }
 
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            width: 100%;
+        }
+
         .btn-action {
             display: block;
             width: 100%;
-            padding: 1rem;
+            padding: 0.9rem 1rem;
             background: linear-gradient(135deg, #00f3ff, #ff00ea);
             border: none;
             border-radius: 9999px;
             color: #ffffff;
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             font-weight: 900;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.5);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.4);
             cursor: pointer;
             transition: transform 0.1s ease, box-shadow 0.1s ease;
         }
 
         .btn-action:active {
             transform: scale(0.96);
-            box-shadow: 0 0 35px rgba(0, 243, 255, 0.9);
+            box-shadow: 0 0 35px rgba(0, 243, 255, 0.8);
+        }
+
+        .btn-secondary {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(0, 243, 255, 0.4);
+            box-shadow: none;
+            color: #67e8f9;
         }
 
         .hud-header {
@@ -139,7 +155,7 @@
             top: 0;
             left: 0;
             right: 0;
-            padding: 1rem 1.25rem;
+            padding: 0.85rem 1.25rem;
             pointer-events: none;
             display: flex;
             justify-content: space-between;
@@ -147,9 +163,15 @@
             z-index: 10;
         }
 
+        .hud-group {
+            display: flex;
+            gap: 0.75rem;
+            pointer-events: auto;
+        }
+
         .hud-card {
-            background: rgba(10, 16, 38, 0.7);
-            border: 1px solid rgba(0, 243, 255, 0.3);
+            background: rgba(10, 16, 38, 0.75);
+            border: 1px solid rgba(0, 243, 255, 0.35);
             border-radius: 12px;
             padding: 6px 14px;
             backdrop-filter: blur(4px);
@@ -164,10 +186,24 @@
         }
 
         .hud-value {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             font-weight: 900;
             color: #00f3ff;
             text-shadow: 0 0 8px rgba(0, 243, 255, 0.6);
+        }
+
+        .hud-btn {
+            background: rgba(10, 16, 38, 0.75);
+            border: 1px solid rgba(0, 243, 255, 0.35);
+            border-radius: 12px;
+            padding: 6px 12px;
+            color: #00f3ff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .evolution-badge {
@@ -181,7 +217,7 @@
             border: 1px solid rgba(255, 0, 234, 0.6);
             padding: 6px 16px;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 800;
             color: #ff80ed;
             letter-spacing: 1px;
@@ -191,7 +227,7 @@
         }
 
         .health-bar-outer {
-            width: 120px;
+            width: 110px;
             height: 10px;
             background: #090d1f;
             border: 1px solid rgba(0, 243, 255, 0.5);
@@ -207,6 +243,36 @@
             border-radius: 9999px;
             transition: width 0.2s ease;
         }
+
+        .settings-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #c7d2fe;
+        }
+
+        .toggle-btn {
+            padding: 0.4rem 0.9rem;
+            border-radius: 8px;
+            border: 1px solid #00f3ff;
+            background: rgba(0, 243, 255, 0.15);
+            color: #00f3ff;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .toggle-btn.off {
+            border-color: #64748b;
+            background: rgba(100, 116, 139, 0.2);
+            color: #94a3b8;
+        }
+
+        .slider {
+            width: 120px;
+            accent-color: #00f3ff;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
@@ -214,31 +280,103 @@
     <div id="game-container">
         <canvas id="gameCanvas"></canvas>
 
-        <!-- HUD Header -->
         <div class="hud-header">
-            <div class="hud-card">
-                <div class="hud-label">DISTANCE</div>
-                <div id="distVal" class="hud-value">0m</div>
+            <div class="hud-group">
+                <div class="hud-card">
+                    <div class="hud-label">DISTANCE</div>
+                    <div id="distVal" class="hud-value">0m</div>
+                </div>
+                <div class="hud-card">
+                    <div class="hud-label">BEST</div>
+                    <div id="highDistVal" class="hud-value" style="color: #fde047;">0m</div>
+                </div>
             </div>
 
-            <div class="hud-card" style="text-align: right;">
-                <div class="hud-label">SHIELD HP</div>
-                <div class="health-bar-outer">
-                    <div id="shieldBar" class="health-bar-inner"></div>
+            <div class="hud-group">
+                <button id="pauseBtn" class="hud-btn" title="Pause Game">⏸</button>
+                <div class="hud-card" style="text-align: right;">
+                    <div class="hud-label">SHIELD HP</div>
+                    <div class="health-bar-outer">
+                        <div id="shieldBar" class="health-bar-inner"></div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Weapon Evolution Badge -->
         <div id="evolutionBadge" class="evolution-badge">
             EVO TIER 1: PLASMA BEAM
         </div>
 
-        <!-- Game Over Screen -->
+        <div id="startScreen" class="overlay-screen">
+            <div class="modal-card">
+                <h1 class="glow-title">CYBER RUNNER</h1>
+                <p class="subtitle">3D Mecha Energy Evolution Runner</p>
+
+                <div class="info-box">
+                    <strong>Controls & Instructions:</strong>
+                    • Move mouse/touch or <b>A/D / Arrows</b> to steer<br>
+                    • Auto-fires energy beams continuously<br>
+                    • Pass blue gates to upgrade weapon evolution tier<br>
+                    • Blast purple target barriers before crashing!
+                </div>
+
+                <div class="btn-group">
+                    <button id="startBtn" type="button" class="btn-action">
+                        LAUNCH RUN
+                    </button>
+                    <button id="openSettingsBtn" type="button" class="btn-action btn-secondary" style="width: auto; padding: 0.9rem 1.2rem;">
+                        ⚙️️
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="pauseScreen" class="overlay-screen hidden">
+            <div class="modal-card">
+                <h2 class="glow-title">GAME PAUSED</h2>
+                <p class="subtitle">Mecha combat systems on standby</p>
+
+                <div class="btn-group" style="flex-direction: column;">
+                    <button id="resumeBtn" type="button" class="btn-action">
+                        RESUME RUN
+                    </button>
+                    <button id="pauseSettingsBtn" type="button" class="btn-action btn-secondary">
+                        SETTINGS
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="settingsScreen" class="overlay-screen hidden">
+            <div class="modal-card">
+                <h2 class="glow-title">SETTINGS</h2>
+                <p class="subtitle" style="margin-bottom: 1.5rem;">Audio & Control Preferences</p>
+
+                <div class="settings-row">
+                    <span>Sound Effects</span>
+                    <button id="soundToggleBtn" class="toggle-btn">ENABLED</button>
+                </div>
+
+                <div class="settings-row">
+                    <span>Steering Sensitivity</span>
+                    <input id="sensitivitySlider" type="range" min="0.5" max="2.0" step="0.1" value="1.0" class="slider">
+                </div>
+
+                <div class="settings-row">
+                    <span>Reset High Score</span>
+                    <button id="resetScoreBtn" class="toggle-btn off">RESET</button>
+                </div>
+
+                <button id="closeSettingsBtn" type="button" class="btn-action" style="margin-top: 1rem;">
+                    BACK
+                </button>
+            </div>
+        </div>
+
         <div id="gameOverScreen" class="overlay-screen hidden">
             <div class="modal-card">
                 <h2 class="glow-pink">SHIELD CRITICAL</h2>
-                <p class="subtitle">Your Mecha Mech crashed into a target barrier!</p>
+                <p class="subtitle">Your Mecha Fighter crashed into a barrier!</p>
 
                 <div class="info-box" style="text-align: center;">
                     <div class="hud-label">Distance Covered</div>
@@ -257,6 +395,7 @@
         class SoundEngine {
             constructor() {
                 this.ctx = null;
+                this.enabled = true;
             }
 
             init() {
@@ -272,7 +411,7 @@
             }
 
             playLaser() {
-                if (!this.ctx) return;
+                if (!this.enabled || !this.ctx) return;
                 try {
                     const osc = this.ctx.createOscillator();
                     const gain = this.ctx.createGain();
@@ -289,7 +428,7 @@
             }
 
             playGatePass() {
-                if (!this.ctx) return;
+                if (!this.enabled || !this.ctx) return;
                 try {
                     const osc = this.ctx.createOscillator();
                     const gain = this.ctx.createGain();
@@ -306,7 +445,7 @@
             }
 
             playExplosion() {
-                if (!this.ctx) return;
+                if (!this.enabled || !this.ctx) return;
                 try {
                     const bufferSize = this.ctx.sampleRate * 0.15;
                     const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
@@ -337,10 +476,23 @@
 
         const canvas = document.getElementById('gameCanvas');
         const startScreen = document.getElementById('startScreen');
+        const pauseScreen = document.getElementById('pauseScreen');
+        const settingsScreen = document.getElementById('settingsScreen');
         const gameOverScreen = document.getElementById('gameOverScreen');
+
         const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resumeBtn = document.getElementById('resumeBtn');
         const restartBtn = document.getElementById('restartBtn');
+        const openSettingsBtn = document.getElementById('openSettingsBtn');
+        const pauseSettingsBtn = document.getElementById('pauseSettingsBtn');
+        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+        const soundToggleBtn = document.getElementById('soundToggleBtn');
+        const sensitivitySlider = document.getElementById('sensitivitySlider');
+        const resetScoreBtn = document.getElementById('resetScoreBtn');
+
         const distVal = document.getElementById('distVal');
+        const highDistVal = document.getElementById('highDistVal');
         const shieldBar = document.getElementById('shieldBar');
         const evolutionBadge = document.getElementById('evolutionBadge');
         const finalDist = document.getElementById('finalDist');
@@ -349,12 +501,19 @@
         let scene, camera, renderer;
         let playerMesh, floorGrid;
         let gameActive = false;
+        let isPaused = false;
+        let previousScreen = null;
+
         let distance = 0;
+        let highScore = parseInt(localStorage.getItem('cyber_runner_highscore') || '0', 10);
         let evoTier = 1;
         let playerHealth = 100;
         let playerTargetX = 0;
         let playerCurrentX = 0;
+        let sensitivity = 1.0;
         let lastShotTime = 0;
+
+        highDistVal.innerText = `${highScore}m`;
 
         const EVO_NAMES = [
             "EVO TIER 1: SINGLE PLASMA BEAM",
@@ -369,6 +528,31 @@
         let targetWalls = [];
         let particles = [];
 
+        function updateWallHPTexture(wallMesh, hp) {
+            const cvs = document.createElement('canvas');
+            cvs.width = 128;
+            cvs.height = 128;
+            const ctx = cvs.getContext('2d');
+
+            ctx.fillStyle = '#a855f7';
+            ctx.fillRect(0, 0, 128, 128);
+
+            ctx.strokeStyle = '#e9d5ff';
+            ctx.lineWidth = 8;
+            ctx.strokeRect(4, 4, 120, 120);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '900 42px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`HP ${hp}`, 64, 64);
+
+            const texture = new THREE.CanvasTexture(cvs);
+            if (wallMesh.material.map) wallMesh.material.map.dispose();
+            wallMesh.material.map = texture;
+            wallMesh.material.needsUpdate = true;
+        }
+
         function init3D() {
             scene = new THREE.Scene();
             scene.fog = new THREE.FogExp2(0x050814, 0.018);
@@ -381,7 +565,6 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-            // Ambient & Directional Lights
             const ambient = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambient);
 
@@ -389,7 +572,6 @@
             dirLight.position.set(0, 10, 5);
             scene.add(dirLight);
 
-            // Infinite Track / Floor
             const gridGeo = new THREE.PlaneGeometry(16, 200, 16, 100);
             const gridMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, wireframe: true, transparent: true, opacity: 0.25 });
             floorGrid = new THREE.Mesh(gridGeo, gridMat);
@@ -397,7 +579,6 @@
             floorGrid.position.z = -80;
             scene.add(floorGrid);
 
-            // Player Mecha Fighter Mesh
             const playerGroup = new THREE.Group();
 
             const bodyGeo = new THREE.ConeGeometry(0.6, 1.6, 4);
@@ -407,7 +588,7 @@
             playerGroup.add(bodyMesh);
 
             const wingGeo = new THREE.BoxGeometry(2.2, 0.1, 0.6);
-            const wingMat = new THREE.MeshStandardMaterial({ color: #ff00ea, roughness: 0.3 });
+            const wingMat = new THREE.MeshStandardMaterial({ color: 0xff00ea, roughness: 0.3 });
             const wingMesh = new THREE.Mesh(wingGeo, wingMat);
             wingMesh.position.z = 0.2;
             playerGroup.add(wingMesh);
@@ -421,7 +602,6 @@
             const group = new THREE.Group();
             group.position.z = zPos;
 
-            // Left Gate (Blue)
             const gateGeo = new THREE.BoxGeometry(3.5, 3, 0.2);
             const leftMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.45 });
             const leftGate = new THREE.Mesh(gateGeo, leftMat);
@@ -429,14 +609,13 @@
             leftGate.position.y = 1.5;
             group.add(leftGate);
 
-            // Right Gate (Orange/Pink)
             const rightMat = new THREE.MeshBasicMaterial({ color: 0xff00ea, transparent: true, opacity: 0.45 });
             const rightGate = new THREE.Mesh(gateGeo, rightMat);
             rightGate.position.x = 2.2;
             rightGate.position.y = 1.5;
             group.add(rightGate);
 
-            group.userData = { passed: false, leftVal: 1, rightVal: 1 };
+            group.userData = { passed: false };
             scene.add(group);
             gatePairs.push(group);
         }
@@ -446,16 +625,17 @@
             group.position.z = zPos;
 
             const wallGeo = new THREE.BoxGeometry(3.2, 2.5, 0.5);
-            const wallMat = new THREE.MeshStandardMaterial({ color: 0xa855f7, roughness: 0.4 });
+            const wallMat = new THREE.MeshStandardMaterial({ roughness: 0.4 });
 
             const wallMesh = new THREE.Mesh(wallGeo, wallMat);
             wallMesh.position.y = 1.25;
 
-            // Random side
             const isLeft = Math.random() > 0.5;
             wallMesh.position.x = isLeft ? -2.2 : 2.2;
 
-            const hp = Math.floor(Math.random() * 15) + 10 + Math.floor(distance * 0.1);
+            const hp = Math.floor(Math.random() * 12) + 8 + Math.floor(distance * 0.08);
+            updateWallHPTexture(wallMesh, hp);
+
             group.userData = { hp: hp, maxHp: hp, mesh: wallMesh, x: wallMesh.position.x };
 
             group.add(wallMesh);
@@ -464,7 +644,7 @@
         }
 
         function fireLasers() {
-            if (!gameActive) return;
+            if (!gameActive || isPaused) return;
             const now = Date.now();
             const cooldown = evoTier >= 4 ? 100 : 160;
             if (now - lastShotTime < cooldown) return;
@@ -479,7 +659,7 @@
                 const laser = new THREE.Mesh(laserGeo, laserMat);
                 laser.rotation.x = Math.PI / 2;
                 laser.position.set(playerMesh.position.x + xOffset, playerMesh.position.y, playerMesh.position.z - 0.8);
-                laser.userData = { vx: vx, vy: 0, vz: -1.8 };
+                laser.userData = { vx: vx, vz: -1.8 };
                 scene.add(laser);
                 lasers.push(laser);
             }
@@ -520,26 +700,44 @@
 
         function updatePlayerX(clientX) {
             const normX = (clientX / window.innerWidth) * 2 - 1;
-            playerTargetX = normX * 3.8;
+            playerTargetX = normX * 3.8 * sensitivity;
         }
 
         window.addEventListener('pointermove', e => {
-            if (gameActive) updatePlayerX(e.clientX);
+            if (gameActive && !isPaused) updatePlayerX(e.clientX);
         });
 
         window.addEventListener('touchmove', e => {
-            if (gameActive && e.touches.length > 0) updatePlayerX(e.touches[0].clientX);
+            if (gameActive && !isPaused && e.touches.length > 0) updatePlayerX(e.touches[0].clientX);
         }, { passive: true });
 
         window.addEventListener('keydown', e => {
-            if (!gameActive) return;
-            if (e.key === 'ArrowLeft' || e.key === 'a') playerTargetX = Math.max(-3.8, playerTargetX - 0.8);
-            if (e.key === 'ArrowRight' || e.key === 'd') playerTargetX = Math.min(3.8, playerTargetX + 0.8);
+            if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') {
+                if (gameActive) togglePause();
+                return;
+            }
+            if (!gameActive || isPaused) return;
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') playerTargetX = Math.max(-3.8, playerTargetX - 0.8 * sensitivity);
+            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') playerTargetX = Math.min(3.8, playerTargetX + 0.8 * sensitivity);
         });
+
+        function togglePause() {
+            if (!gameActive) return;
+            isPaused = !isPaused;
+
+            if (isPaused) {
+                pauseScreen.classList.remove('hidden');
+                pauseScreen.style.display = 'flex';
+            } else {
+                pauseScreen.classList.add('hidden');
+                pauseScreen.style.display = 'none';
+            }
+        }
 
         function launchGame() {
             audio.init();
             gameActive = true;
+            isPaused = false;
             distance = 0;
             evoTier = 1;
             playerHealth = 100;
@@ -548,8 +746,8 @@
 
             evolutionBadge.innerText = EVO_NAMES[0];
             shieldBar.style.width = '100%';
+            distVal.innerText = '0m';
 
-            // Clear old objects
             gatePairs.forEach(g => scene.remove(g));
             targetWalls.forEach(w => scene.remove(w));
             lasers.forEach(l => scene.remove(l));
@@ -560,41 +758,103 @@
             lasers = [];
             particles = [];
 
-            // Spawn initial obstacles
             for (let i = 1; i <= 5; i++) {
                 createGatePair(-i * 35);
                 createTargetWall(-i * 35 - 18);
             }
 
-            if (startScreen) {
-                startScreen.classList.add('hidden');
-                startScreen.style.display = 'none';
-            }
-            if (gameOverScreen) {
-                gameOverScreen.classList.add('hidden');
-                gameOverScreen.style.display = 'none';
-            }
+            hideAllOverlayScreens();
+        }
+
+        function hideAllOverlayScreens() {
+            [startScreen, pauseScreen, settingsScreen, gameOverScreen].forEach(scr => {
+                if (scr) {
+                    scr.classList.add('hidden');
+                    scr.style.display = 'none';
+                }
+            });
         }
 
         function triggerGameOver() {
             gameActive = false;
             audio.playExplosion();
-            finalDist.innerText = `${Math.floor(distance)}m`;
+
+            const finalMeters = Math.floor(distance);
+            if (finalMeters > highScore) {
+                highScore = finalMeters;
+                localStorage.setItem('cyber_runner_highscore', highScore.toString());
+                highDistVal.innerText = `${highScore}m`;
+            }
+
+            finalDist.innerText = `${finalMeters}m`;
             finalEvo.innerText = evoTier;
 
             gameOverScreen.classList.remove('hidden');
             gameOverScreen.style.display = 'flex';
         }
 
-        function bindStart(elem) {
+        function attachButtonEvent(elem, callback) {
             if (!elem) return;
+            let lastTrigger = 0;
             const handler = function(e) {
-                if (e && e.stopPropagation) e.stopPropagation();
-                launchGame();
+                const now = Date.now();
+                if (now - lastTrigger < 250) return;
+                lastTrigger = now;
+                if (e) {
+                    if (e.cancelable) e.preventDefault();
+                    if (e.stopPropagation) e.stopPropagation();
+                }
+                if (audio) audio.init();
+                callback(e);
             };
+            elem.addEventListener('pointerdown', handler);
             elem.addEventListener('click', handler);
-            elem.addEventListener('touchend', handler);
-            elem.addEventListener('pointerup', handler);
+        }
+
+        attachButtonEvent(soundToggleBtn, () => {
+            audio.enabled = !audio.enabled;
+            soundToggleBtn.innerText = audio.enabled ? 'ENABLED' : 'MUTED';
+            if (audio.enabled) soundToggleBtn.classList.remove('off');
+            else soundToggleBtn.classList.add('off');
+        });
+
+        sensitivitySlider.addEventListener('input', (e) => {
+            sensitivity = parseFloat(e.target.value);
+        });
+
+        attachButtonEvent(resetScoreBtn, () => {
+            highScore = 0;
+            localStorage.removeItem('cyber_runner_highscore');
+            highDistVal.innerText = '0m';
+            resetScoreBtn.innerText = 'DONE!';
+            setTimeout(() => { resetScoreBtn.innerText = 'RESET'; }, 1000);
+        });
+
+        attachButtonEvent(openSettingsBtn, () => {
+            previousScreen = startScreen;
+            startScreen.style.display = 'none';
+            settingsScreen.classList.remove('hidden');
+            settingsScreen.style.display = 'flex';
+        });
+
+        attachButtonEvent(pauseSettingsBtn, () => {
+            previousScreen = pauseScreen;
+            pauseScreen.style.display = 'none';
+            settingsScreen.classList.remove('hidden');
+            settingsScreen.style.display = 'flex';
+        });
+
+        attachButtonEvent(closeSettingsBtn, () => {
+            settingsScreen.classList.add('hidden');
+            settingsScreen.style.display = 'none';
+            if (previousScreen) previousScreen.style.display = 'flex';
+        });
+
+        attachButtonEvent(pauseBtn, togglePause);
+        attachButtonEvent(resumeBtn, togglePause);
+
+        function bindStart(elem) {
+            attachButtonEvent(elem, launchGame);
         }
 
         bindStart(startBtn);
@@ -603,22 +863,19 @@
         function animate() {
             requestAnimationFrame(animate);
 
-            if (gameActive) {
+            if (gameActive && !isPaused) {
                 distance += 0.35;
                 distVal.innerText = `${Math.floor(distance)}m`;
 
-                // Smooth mecha movement
                 playerCurrentX += (playerTargetX - playerCurrentX) * 0.15;
                 playerMesh.position.x = playerCurrentX;
                 playerMesh.rotation.z = -(playerTargetX - playerCurrentX) * 0.25;
 
-                // Animate track grid texture
                 floorGrid.position.z += 0.6;
                 if (floorGrid.position.z > -40) floorGrid.position.z = -80;
 
                 fireLasers();
 
-                // Update Lasers
                 for (let i = lasers.length - 1; i >= 0; i--) {
                     const l = lasers[i];
                     l.position.x += l.userData.vx;
@@ -630,12 +887,10 @@
                     }
                 }
 
-                // Update Gates
                 for (let i = gatePairs.length - 1; i >= 0; i--) {
                     const g = gatePairs[i];
                     g.position.z += 0.6;
 
-                    // Pass gate logic
                     if (!g.userData.passed && g.position.z > -1) {
                         g.userData.passed = true;
                         audio.playGatePass();
@@ -653,16 +908,15 @@
                     }
                 }
 
-                // Update Target Walls & Collision
                 for (let i = targetWalls.length - 1; i >= 0; i--) {
                     const w = targetWalls[i];
                     w.position.z += 0.6;
 
-                    // Laser hits wall
                     for (let j = lasers.length - 1; j >= 0; j--) {
                         const l = lasers[j];
                         if (Math.abs(l.position.z - w.position.z) < 1.0 && Math.abs(l.position.x - w.userData.x) < 1.8) {
                             w.userData.hp--;
+                            updateWallHPTexture(w.userData.mesh, Math.max(0, w.userData.hp));
                             createExplosion(l.position, 0xff00ea);
                             scene.remove(l);
                             lasers.splice(j, 1);
@@ -678,7 +932,6 @@
                         }
                     }
 
-                    // Player collides with wall
                     if (w && Math.abs(w.position.z - playerMesh.position.z) < 0.8 && Math.abs(w.userData.x - playerMesh.position.x) < 1.5) {
                         playerHealth -= 35;
                         shieldBar.style.width = `${Math.max(0, playerHealth)}%`;
@@ -696,7 +949,6 @@
                     }
                 }
 
-                // Update Particles
                 for (let i = particles.length - 1; i >= 0; i--) {
                     const p = particles[i];
                     p.position.x += p.userData.vx;
@@ -709,8 +961,7 @@
                         particles.splice(i, 1);
                     }
                 }
-            } else {
-                // Ambient idle background spin
+            } else if (!gameActive) {
                 if (floorGrid) floorGrid.position.z += 0.15;
                 if (floorGrid && floorGrid.position.z > -40) floorGrid.position.z = -80;
             }
@@ -727,14 +978,11 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // Initialize 3D scene & start game immediately on load
         window.onload = () => {
             init3D();
-            launchGame();
             animate();
         };
 
-        // Initialize Web Audio on first user interaction anywhere
         const enableAudio = () => {
             audio.init();
             window.removeEventListener('pointerdown', enableAudio);
@@ -742,6 +990,15 @@
         };
         window.addEventListener('pointerdown', enableAudio);
         window.addEventListener('touchstart', enableAudio);
+
+        // Register PWA Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(() => console.log('PWA Service Worker Registered Successfully'))
+                    .catch(err => console.error('Service Worker Registration Failed:', err));
+            });
+        }
     </script>
 </body>
 </html>
