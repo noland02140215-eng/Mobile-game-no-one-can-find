@@ -1,0 +1,1 @@
+Hi I have little to say the project is a bit weird but I got Gemini to code a game it's a sci-fi game like those mobile ads I hope you enjoy it's not 100% ai the textures are though the script was by me I figure bugs
